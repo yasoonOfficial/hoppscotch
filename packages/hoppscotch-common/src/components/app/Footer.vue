@@ -1,15 +1,17 @@
 <template>
   <div>
     <div class="flex justify-between bg-primary">
-      <div class="flex">
-        <HoppButtonSecondary
-          v-tippy="{ theme: 'tooltip' }"
-          :title="EXPAND_NAVIGATION ? t('hide.sidebar') : t('show.sidebar')"
-          :icon="IconSidebar"
-          class="transform"
-          :class="{ '-rotate-180': !EXPAND_NAVIGATION }"
-          @click="EXPAND_NAVIGATION = !EXPAND_NAVIGATION"
-        />
+      <div class="flex" style="margin-left: 5px; align-items: center">
+        <HoppSmartLink
+            to="/settings"
+            style="height: 16px"
+            tabindex="0"
+            exact="false"
+          >
+            <div>
+          <component :is="IconSettings" class="svg-icons" />
+          </div>
+      </HoppSmartLink>
         <HoppButtonSecondary
           v-tippy="{ theme: 'tooltip' }"
           :title="`${ZEN_MODE ? t('action.turn_off') : t('action.turn_on')} ${t(
@@ -22,16 +24,6 @@
           }"
           @click="ZEN_MODE = !ZEN_MODE"
         />
-        <tippy interactive trigger="click" theme="popover">
-          <HoppButtonSecondary
-            v-tippy="{ theme: 'tooltip' }"
-            :title="t('settings.interceptor')"
-            :icon="IconShieldCheck"
-          />
-          <template #content>
-            <AppInterceptor />
-          </template>
-        </tippy>
       </div>
       <div class="flex">
         <tippy
@@ -157,13 +149,6 @@
           @click="invokeAction('flyouts.keybinds.toggle')"
         />
         <HoppButtonSecondary
-          v-if="navigatorShare"
-          v-tippy="{ theme: 'tooltip' }"
-          :icon="IconShare2"
-          :title="t('request.share')"
-          @click="nativeShare()"
-        />
-        <HoppButtonSecondary
           v-tippy="{ theme: 'tooltip' }"
           :title="COLUMN_LAYOUT ? t('layout.row') : t('layout.column')"
           :icon="IconColumns"
@@ -201,6 +186,7 @@ import { version } from "~/../package.json"
 import IconSidebar from "~icons/lucide/sidebar"
 import IconMinimize from "~icons/lucide/minimize"
 import IconMaximize from "~icons/lucide/maximize"
+import IconSettings from "~icons/lucide/settings"
 import IconZap from "~icons/lucide/zap"
 import IconShare2 from "~icons/lucide/share-2"
 import IconColumns from "~icons/lucide/columns"

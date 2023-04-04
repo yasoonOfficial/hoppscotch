@@ -12,20 +12,11 @@
       >
         <HoppButtonSecondary
           class="tracking-wide !font-bold !text-secondaryDark hover:bg-primaryDark focus-visible:bg-primaryDark uppercase"
-          :label="t('app.name')"
+          label="yasoon hop"
           to="/"
         />
-        <AppGitHubStarButton class="mt-1.5 transition <sm:hidden" />
       </div>
       <div class="inline-flex items-center space-x-2">
-        <HoppButtonSecondary
-          v-if="showInstallButton"
-          v-tippy="{ theme: 'tooltip' }"
-          :title="t('header.install_pwa')"
-          :icon="IconDownload"
-          class="rounded hover:bg-primaryDark focus-visible:bg-primaryDark"
-          @click="installPWA()"
-        />
         <HoppButtonSecondary
           v-tippy="{ theme: 'tooltip', allowHTML: true }"
           :title="`${t('app.search')} <kbd>/</kbd>`"
@@ -42,117 +33,10 @@
           class="rounded hover:bg-primaryDark focus-visible:bg-primaryDark"
           @click="invokeAction('modals.support.toggle')"
         />
-        <HoppButtonSecondary
-          v-if="currentUser === null"
-          :icon="IconUploadCloud"
-          :label="t('header.save_workspace')"
-          filled
-          class="hidden md:flex"
-          @click="invokeAction('modals.login.toggle')"
-        />
         <HoppButtonPrimary
-          v-if="currentUser === null"
           :label="t('header.login')"
           @click="invokeAction('modals.login.toggle')"
         />
-        <div v-else class="inline-flex items-center space-x-2">
-          <HoppButtonPrimary
-            v-tippy="{ theme: 'tooltip' }"
-            :title="t('team.invite_tooltip')"
-            :label="t('team.invite')"
-            :icon="IconUserPlus"
-            class="!bg-green-500 !bg-opacity-15 !text-green-500 !hover:bg-opacity-10 !hover:bg-green-400 !hover:text-green-600"
-            @click="showTeamsModal = true"
-          />
-          <span class="px-2">
-            <tippy
-              interactive
-              trigger="click"
-              theme="popover"
-              :on-shown="() => tippyActions.focus()"
-            >
-              <ProfilePicture
-                v-if="currentUser.photoURL"
-                v-tippy="{
-                  theme: 'tooltip',
-                }"
-                :url="currentUser.photoURL"
-                :alt="
-                  currentUser.displayName ||
-                  t('profile.default_hopp_displayname')
-                "
-                :title="
-                  currentUser.displayName ||
-                  currentUser.email ||
-                  t('profile.default_hopp_displayname')
-                "
-                indicator
-                :indicator-styles="
-                  network.isOnline ? 'bg-green-500' : 'bg-red-500'
-                "
-              />
-              <ProfilePicture
-                v-else
-                v-tippy="{ theme: 'tooltip' }"
-                :title="
-                  currentUser.displayName ||
-                  currentUser.email ||
-                  t('profile.default_hopp_displayname')
-                "
-                :initial="currentUser.displayName || currentUser.email"
-                indicator
-                :indicator-styles="
-                  network.isOnline ? 'bg-green-500' : 'bg-red-500'
-                "
-              />
-              <template #content="{ hide }">
-                <div
-                  ref="tippyActions"
-                  class="flex flex-col focus:outline-none"
-                  tabindex="0"
-                  @keyup.p="profile.$el.click()"
-                  @keyup.s="settings.$el.click()"
-                  @keyup.l="logout.$el.click()"
-                  @keyup.escape="hide()"
-                >
-                  <div class="flex flex-col px-2 text-tiny">
-                    <span class="inline-flex font-semibold truncate">
-                      {{
-                        currentUser.displayName ||
-                        t("profile.default_hopp_displayname")
-                      }}
-                    </span>
-                    <span class="inline-flex truncate text-secondaryLight">
-                      {{ currentUser.email }}
-                    </span>
-                  </div>
-                  <hr />
-                  <HoppSmartItem
-                    ref="profile"
-                    to="/profile"
-                    :icon="IconUser"
-                    :label="t('navigation.profile')"
-                    :shortcut="['P']"
-                    @click="hide()"
-                  />
-                  <HoppSmartItem
-                    ref="settings"
-                    to="/settings"
-                    :icon="IconSettings"
-                    :label="t('navigation.settings')"
-                    :shortcut="['S']"
-                    @click="hide()"
-                  />
-                  <FirebaseLogout
-                    ref="logout"
-                    :shortcut="['L']"
-                    @confirm-logout="hide()"
-                  />
-                </div>
-              </template>
-            </tippy>
-          </span>
-        </div>
       </div>
     </header>
     <AppAnnouncement v-if="!network.isOnline" />

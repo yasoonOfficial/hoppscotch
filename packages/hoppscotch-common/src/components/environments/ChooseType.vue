@@ -9,67 +9,6 @@
         :id="'my-environments'"
         :label="`${t('environment.my_environments')}`"
       />
-      <HoppSmartTab
-        :id="'team-environments'"
-        :label="`${t('environment.team_environments')}`"
-      >
-        <HoppSmartIntersection @intersecting="onTeamSelectIntersect">
-          <tippy
-            interactive
-            trigger="click"
-            theme="popover"
-            placement="bottom"
-            :on-shown="() => tippyActions.focus()"
-          >
-            <span
-              v-tippy="{ theme: 'tooltip' }"
-              :title="`${t('collection.select_team')}`"
-              class="bg-transparent border-b border-dividerLight select-wrapper"
-            >
-              <HoppButtonSecondary
-                v-if="environmentType.selectedTeam"
-                :icon="IconUsers"
-                :label="environmentType.selectedTeam.name"
-                class="flex-1 !justify-start pr-8 rounded-none"
-              />
-              <HoppButtonSecondary
-                v-else
-                :label="`${t('collection.select_team')}`"
-                class="flex-1 !justify-start pr-8 rounded-none"
-              />
-            </span>
-            <template #content="{ hide }">
-              <div
-                ref="tippyActions"
-                class="flex flex-col focus:outline-none"
-                tabindex="0"
-                @keyup.escape="hide()"
-              >
-                <HoppSmartItem
-                  v-for="(team, index) in myTeams"
-                  :key="`team-${index}`"
-                  :label="team.name"
-                  :info-icon="
-                    team.id === environmentType.selectedTeam?.id
-                      ? IconDone
-                      : undefined
-                  "
-                  :active-info-icon="
-                    team.id === environmentType.selectedTeam?.id
-                  "
-                  :icon="IconUsers"
-                  @click="
-                    () => {
-                      updateSelectedTeam(team)
-                      hide()
-                    }
-                  "
-                />
-              </div>
-            </template>
-          </tippy>
-        </HoppSmartIntersection>
-      </HoppSmartTab>
     </HoppSmartTabs>
   </div>
 </template>

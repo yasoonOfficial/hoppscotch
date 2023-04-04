@@ -1,26 +1,26 @@
-import axios, { AxiosRequestConfig } from "axios"
-import { v4 } from "uuid"
-import { pipe } from "fp-ts/function"
-import * as TE from "fp-ts/TaskEither"
-import { cloneDeep } from "lodash-es"
-import { NetworkResponse, NetworkStrategy } from "../network"
-import { decodeB64StringToArrayBuffer } from "../utils/b64"
-import { settingsStore } from "~/newstore/settings"
+import axios, { AxiosRequestConfig } from "axios";
+import { v4 } from "uuid";
+import { pipe } from "fp-ts/function";
+import * as TE from "fp-ts/TaskEither";
+import { cloneDeep } from "lodash-es";
+import { NetworkResponse, NetworkStrategy } from "../network";
+import { decodeB64StringToArrayBuffer } from "../utils/b64";
+import { settingsStore } from "~/newstore/settings";
 
-let cancelSource = axios.CancelToken.source()
+let cancelSource = axios.CancelToken.source();
 
 type ProxyHeaders = {
-  "multipart-part-key"?: string
-}
+  "multipart-part-key"?: string;
+};
 
-type ProxyPayloadType = FormData | (AxiosRequestConfig & { wantsBinary: true })
+type ProxyPayloadType = FormData | (AxiosRequestConfig & { wantsBinary: true; });
 
 export const cancelRunningAxiosRequest = () => {
-  cancelSource.cancel()
+  cancelSource.cancel();
 
   // Create a new cancel token
-  cancelSource = axios.CancelToken.source()
-}
+  cancelSource = axios.CancelToken.source();
+};
 
 const getProxyPayload = (
   req: AxiosRequestConfig,
@@ -29,43 +29,43 @@ const getProxyPayload = (
   let payload: ProxyPayloadType = {
     ...req,
     wantsBinary: true,
-    accessToken: import.meta.env.VITE_PROXYSCOTCH_ACCESS_TOKEN ?? "",
-  }
+    accessToken: window["PROXY_ACCESS_TOKEN"] ?? "",
+  };
 
   if (payload.data instanceof FormData) {
-    const formData = payload.data
-    payload.data = ""
-    formData.append(multipartKey!, JSON.stringify(payload))
-    payload = formData
+    const formData = payload.data;
+    payload.data = "";
+    formData.append(multipartKey!, JSON.stringify(payload));
+    payload = formData;
   }
 
-  return payload
-}
+  return payload;
+};
 
 const preProcessRequest = (req: AxiosRequestConfig): AxiosRequestConfig => {
-  const reqClone = cloneDeep(req)
+  const reqClone = cloneDeep(req);
 
   // If the parameters are URLSearchParams, inject them to URL instead
   // This prevents issues of marshalling the URLSearchParams to the proxy
   if (reqClone.params instanceof URLSearchParams) {
     try {
-      const url = new URL(reqClone.url ?? "")
+      const url = new URL(reqClone.url ?? "");
 
       for (const [key, value] of reqClone.params.entries()) {
-        url.searchParams.append(key, value)
+        url.searchParams.append(key, value);
       }
 
-      reqClone.url = url.toString()
+      reqClone.url = url.toString();
     } catch (e) {
       // making this a non-empty block, so we can make the linter happy.
       // we should probably use, allowEmptyCatch, or take the time to do something with the caught errors :)
     }
 
-    reqClone.params = {}
+    reqClone.params = {};
   }
 
-  return reqClone
-}
+  return reqClone;
+};
 
 const axiosWithProxy: NetworkStrategy = (req) =>
   pipe(
@@ -87,8 +87,8 @@ const axiosWithProxy: NetworkStrategy = (req) =>
       TE.of(
         processedReq.data instanceof FormData
           ? <ProxyHeaders>{
-              "multipart-part-key": multipartKey,
-            }
+            "multipart-part-key": multipartKey,
+          }
           : <ProxyHeaders>{}
       )
     ),
@@ -128,12 +128,12 @@ const axiosWithProxy: NetworkStrategy = (req) =>
     // Process Base64
     TE.chain(({ data }) => {
       if (data.isBinary) {
-        data.data = decodeB64StringToArrayBuffer(data.data)
+        data.data = decodeB64StringToArrayBuffer(data.data);
       }
 
-      return TE.of(data)
+      return TE.of(data);
     })
-  )
+  );
 
 const axiosWithoutProxy: NetworkStrategy = (req) =>
   pipe(
@@ -152,12 +152,12 @@ const axiosWithoutProxy: NetworkStrategy = (req) =>
         ? TE.right(e.response as NetworkResponse)
         : TE.left(e)
     )
-  )
+  );
 
 const axiosStrategy: NetworkStrategy = (req) =>
   pipe(
     req,
     settingsStore.value.PROXY_ENABLED ? axiosWithProxy : axiosWithoutProxy
-  )
+  );
 
-export default axiosStrategy
+export default axiosStrategy;

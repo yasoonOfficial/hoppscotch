@@ -10,12 +10,6 @@
           :dbl-click-splitter="false"
           :horizontal="!mdAndLarger"
         >
-          <Pane
-            style="width: auto; height: auto"
-            class="!overflow-auto hidden md:flex md:flex-col"
-          >
-            <AppSidenav />
-          </Pane>
           <Pane class="flex flex-1 !overflow-auto">
             <Splitpanes
               class="no-splitter"
@@ -38,13 +32,7 @@
       <Pane v-if="mdAndLarger" style="height: auto">
         <AppFooter />
       </Pane>
-      <Pane
-        v-else
-        style="height: auto"
-        class="!overflow-auto flex flex-col fixed inset-x-0 bottom-0 z-10"
-      >
-        <AppSidenav />
-      </Pane>
+
     </Splitpanes>
     <AppActionHandler />
     <AppPowerSearch :show="showSearch" @hide-modal="showSearch = false" />

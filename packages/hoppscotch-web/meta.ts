@@ -1,4 +1,4 @@
-import { IHTMLTag } from "vite-plugin-html-config"
+import { IHTMLTag } from "vite-plugin-html-config";
 
 export const APP_INFO = {
   name: "Hoppscotch",
@@ -13,7 +13,7 @@ export const APP_INFO = {
   social: {
     twitter: "@hoppscotch_io",
   },
-} as const
+} as const;
 
 export const META_TAGS = (env: Record<string, string>): IHTMLTag[] => [
   {
@@ -115,4 +115,4 @@ export const META_TAGS = (env: Record<string, string>): IHTMLTag[] => [
     content: "/icon.png",
     color: APP_INFO.app.background,
   },
-]
+];

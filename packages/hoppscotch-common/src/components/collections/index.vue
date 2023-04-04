@@ -54,52 +54,7 @@
           @display-modal-import-export="displayModalImportExport(true)"
         />
       </HoppSmartTab>
-      <HoppSmartTab
-        :id="'team-collections'"
-        :label="`${t('collection.team_collections')}`"
-      >
-        <div
-          class="sticky z-10 flex flex-1 bg-primary"
-          :style="
-            saveRequest
-              ? 'top: calc(var(--upper-primary-sticky-fold) - var(--line-height-body))'
-              : 'top: var(--upper-primary-sticky-fold)'
-          "
-        >
-          <CollectionsTeamSelect
-            :collections-type="collectionsType"
-            :my-teams="myTeams"
-            :is-team-list-loading="isTeamListLoading"
-            @update-selected-team="updateSelectedTeam"
-            @team-select-intersect="onTeamSelectIntersect"
-            @display-team-modal-add="displayTeamModalAdd(true)"
-          />
-        </div>
-        <CollectionsTeamCollections
-          :collections-type="collectionsType"
-          :team-collection-list="teamCollectionList"
-          :team-loading-collections="teamLoadingCollections"
-          :export-loading="exportLoading"
-          :duplicate-loading="duplicateLoading"
-          :save-request="saveRequest"
-          :picked="picked"
-          @add-request="addRequest"
-          @add-folder="addFolder"
-          @edit-collection="editCollection"
-          @edit-folder="editFolder"
-          @export-data="exportData"
-          @remove-collection="removeCollection"
-          @remove-folder="removeFolder"
-          @edit-request="editRequest"
-          @duplicate-request="duplicateRequest"
-          @remove-request="removeRequest"
-          @select-request="selectRequest"
-          @select="selectPicked"
-          @expand-team-collection="expandTeamCollection"
-          @display-modal-add="displayModalAdd(true)"
-          @display-modal-import-export="displayModalImportExport(true)"
-        />
-      </HoppSmartTab>
+      
     </HoppSmartTabs>
     <CollectionsAdd
       :show="showModalAdd"
